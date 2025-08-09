@@ -4,6 +4,9 @@ on:
     - cron: "0 9 * * *"  # runs every day at 9 AM UTC
   workflow_dispatch:    # allows manual runs
 
+permissions:
+  contents: write      # <-- This is crucial for push access
+
 jobs:
   run-ai:
     runs-on: ubuntu-latest
