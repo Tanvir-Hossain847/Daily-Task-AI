@@ -66,11 +66,12 @@ extension = file_types[chosen_type]
 prompt = get_unused_prompt(chosen_type)
 
 # Generate AI code
-response = openai.ChatCompletion.create(
+response = openai.chat.completions.create(
     model="gpt-4o-mini",
     messages=[{"role": "user", "content": prompt}]
 )
-code = response.choices[0].message["content"]
+
+code = response.choices[0].message.content
 
 # Filename with date and type
 file_name = f"{chosen_type}_file_{datetime.now().strftime('%Y_%m_%d')}{extension}"
