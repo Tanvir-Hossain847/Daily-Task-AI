@@ -1,34 +1,58 @@
-You can use the following JavaScript code to display a random fun fact in the console:
+You can create a simple countdown timer in JavaScript that starts from 10 and changes the background color when it reaches zero. Below is an example of how to implement this using HTML and JavaScript:
 
-```javascript
-// Array of fun facts
-const funFacts = [
-    "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still edible.",
-    "Bananas are berries, but strawberries are not.",
-    "A group of flamingos is called a 'flamboyance'.",
-    "Octopuses have three hearts.",
-    "Wombat poop is cube-shaped.",
-    "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion.",
-    "The longest wedding veil was longer than 63 football fields.",
-    "Some cats are allergic to humans.",
-    "A bolt of lightning contains enough energy to toast 100,000 slices of bread.",
-    "Scotland's national animal is the unicorn."
-];
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            font-size: 2rem;
+            transition: background-color 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">10</div>
 
-// Function to display a random fun fact
-function displayRandomFunFact() {
-    const randomIndex = Math.floor(Math.random() * funFacts.length);
-    console.log(funFacts[randomIndex]);
-}
+    <script>
+        let countdownValue = 10;
+        const timerElement = document.getElementById('timer');
 
-// Call the function to display a random fun fact
-displayRandomFunFact();
+        const countdownTimer = setInterval(() => {
+            timerElement.textContent = countdownValue;
+            countdownValue--;
+
+            if (countdownValue < 0) {
+                clearInterval(countdownTimer);
+                document.body.style.backgroundColor = 'lightcoral'; // Change background color
+                timerElement.textContent = 'Time is up!';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
 ```
 
-### How It Works:
-1. An array `funFacts` is created, consisting of various interesting facts.
-2. The function `displayRandomFunFact` is defined to randomly select a fact from the array.
-3. It generates a random index using `Math.random()` and `Math.floor()`, then logs the selected fun fact to the console.
-4. Finally, the function is called to display a random fun fact.
+### Explanation:
 
-You can run this code in a JavaScript environment (like a web browser console or Node.js) to see the result. Each time you run the script, it will display a different fact.
+1. **HTML Structure**: The HTML consists of a simple `div` that displays the countdown timer.
+
+2. **CSS**: The styles in the `<style>` tag center the timer on the screen and give it a basic appearance. The `transition` property will allow for a smooth change in background color.
+
+3. **JavaScript Code**:
+   - Initializes `countdownValue` to 10.
+   - Gets the timer element by its ID.
+   - Sets a `setInterval` to run every second (1000 milliseconds).
+   - Updates the text content of the timer element with the current countdown value.
+   - Decreases `countdownValue` by one each second.
+   - When the countdown reaches zero, it clears the interval to stop the timer, changes the background color of the body, and updates the timer text to indicate that time is up.
+
+You can copy this code into an HTML file, save it, and open it in your browser to see the countdown timer in action!
