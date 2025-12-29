@@ -1,0 +1,77 @@
+Creating a neon glowing button using CSS is a fun way to add an eye-catching component to your web design. Here's an example of how to create a neon glowing effect for a button:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Glowing Button</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #111;
+            margin: 0;
+        }
+
+        .neon-button {
+            padding: 15px 30px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #6200ea; /* Button background color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 5px #6200ea, 0 0 10px #6200ea, 0 0 20px #6200ea, 0 0 30px #bb86fc;
+            transition: all 0.3s ease;
+        }
+
+        .neon-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(98, 0, 234, 0.7);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .neon-button:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .neon-button:hover {
+            box-shadow: 0 0 15px #6200ea, 0 0 30px #6200ea, 0 0 50px #bb86fc;
+        }
+
+        .neon-button span {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <button class="neon-button"><span>Glowing Button</span></button>
+</body>
+</html>
+```
+
+### Explanation:
+- **Basic Styling**: The button has padding, font size, and a background color. The `border` is set to `none` to remove the default button style.
+- **Neon Effect**: The box-shadow property creates the glowing effect around the button using a combination of shadows in different strengths and colors.
+- **Hover Effect**: The `::after` pseudo-element creates an expanding glow effect when the button is hovered over. 
+- **Smooth Transition**: Using `transition` allows for smooth animation when hovering.
+
+You can change the colors in the CSS to fit your design needs, and adjust the `box-shadow` values to modify the glow intensity. Enjoy your glowing button!
