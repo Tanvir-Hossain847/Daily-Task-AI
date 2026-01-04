@@ -1,5 +1,7 @@
 {
-  "html": [],
+  "html": [
+    "Create an HTML page with a motivational quote and styled background."
+  ],
   "css": [
     "Write CSS code for a neon glowing button.",
     "Create CSS for a smooth gradient background animation."
