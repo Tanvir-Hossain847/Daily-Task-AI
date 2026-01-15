@@ -1,0 +1,83 @@
+Here's a simple CSS snippet to create a neon glowing button. You can adjust the colors, sizes, and other properties according to your design preferences.
+
+### HTML
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Glowing Button</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="neon-button">Click Me!</button>
+</body>
+</html>
+```
+
+### CSS (styles.css)
+```css
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #111; /* Dark background to enhance neon effect */
+    margin: 0;
+}
+
+.neon-button {
+    padding: 20px 40px;
+    font-size: 20px;
+    color: #fff; /* Text color */
+    background-color: #0f0; /* Neon green background */
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.neon-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background-color: rgba(15, 255, 0, 0.3); /* Neon glow color */
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+    z-index: 0;
+}
+
+.neon-button:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.neon-button:hover {
+    color: #0f0; /* Change text color on hover */
+}
+
+.neon-button:focus {
+    outline: none;
+}
+
+.neon-button span {
+    position: relative;
+    z-index: 1; /* Ensure the text sits above the glow */
+}
+```
+
+### Explanation:
+1. **Button Style**: The button has padding, a background color, font size, and rounded corners.
+2. **Neon Glow**: The `::before` pseudo-element creates the glowing effect. It starts with a scale of 0 (invisible) and expands to a scale of 1 on hover.
+3. **Hover Effects**: The color of the text changes on hover to match the glow for better visibility.
+4. **Centered Layout**: The body is styled to center the button vertically and horizontally.
+
+Feel free to customize the colors and sizes to match your design vision!
