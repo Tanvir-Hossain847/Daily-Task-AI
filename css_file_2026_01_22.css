@@ -1,0 +1,93 @@
+Creating a neon glowing button using CSS involves utilizing properties like `background-color`, `border`, `text-shadow`, and `box-shadow`. Below is an example of how you can create a neon glowing button effect:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Glowing Button</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+        }
+
+        .neon-button {
+            background-color: #1d1d1d;
+            color: #00ff99;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .neon-button:before,
+        .neon-button:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            background: inherit;
+            opacity: 0.6;
+            filter: blur(15px);
+            z-index: 0;
+        }
+
+        .neon-button:after {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .neon-button:hover {
+            color: #00e6b8;
+        }
+
+        .neon-button:hover:after {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="neon-button">Click Me!</button>
+</body>
+</html>
+```
+
+### Explanation:
+
+1. **HTML Structure:** A simple button element is created with the class `neon-button`.
+
+2. **CSS Styles:**
+   - The `body` is styled to center the button and give it a dark background for better neon visibility.
+   - The `.neon-button` class includes styles for background color, text color, padding, and other typical button styles.
+   - The `:before` and `:after` pseudo-elements are used to create the glowing effect. They inherit the background color and are blurred to create the neon effect.
+   - The `pulse` animation is applied to the `:after` pseudo-element to make the glow pulse gently.
+   - The `hover` effect alters the text color and enhances the effect when the user hovers over the button, indicating interactivity.
+
+You can modify the colors and sizes to fit your design preferences.
