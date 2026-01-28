@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 # Load your API key from GitHub Secrets (env var)
-openai.api_key = os.getenv("OPENAI_API_KEY")
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # File types and extensions
 file_types = {
@@ -66,12 +66,11 @@ extension = file_types[chosen_type]
 prompt = get_unused_prompt(chosen_type)
 
 # Generate AI code
-response = openai.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[{"role": "user", "content": prompt}]
-)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-code = response.choices[0].message.content
+response = model.generate_content(prompt)
+code = response.text
+
 
 # Filename with date and type
 file_name = f"{chosen_type}_file_{datetime.now().strftime('%Y_%m_%d')}{extension}"
