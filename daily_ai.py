@@ -1,8 +1,9 @@
-import openai 
 import os
 import random
 from datetime import datetime
 import json
+import google.generativeai as genai  # <-- THIS WAS MISSING
+
 
 # Load your API key from GitHub Secrets (env var)
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
