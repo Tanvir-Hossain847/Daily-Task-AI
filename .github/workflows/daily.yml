@@ -23,7 +23,7 @@ jobs:
       - name: Clean old Google AI packages
         run: |
           python -m pip uninstall -y google-generativeai || true
-          python -m pip uninstall -y google || true
+          pip uninstall -y google-generativeai || true
 
       - name: Install Gemini SDK (official)
         run: |
