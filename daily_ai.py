@@ -67,7 +67,7 @@ prompt = get_unused_prompt(chosen_type)
 
 # Generate AI code
 response = client.models.generate_content(
-    model="gemini-1.5-flash",
+    model="gemini-1.0-pro",
     contents=prompt
 )
 
