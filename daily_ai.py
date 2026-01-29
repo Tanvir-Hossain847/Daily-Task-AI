@@ -2,12 +2,11 @@ import os
 import random
 from datetime import datetime
 import json
-import google.generativeai as genai  # <-- THIS WAS MISSING
-
+from google import genai
+import os
 
 # Load your API key from GitHub Secrets (env var)
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 # File types and extensions
 file_types = {
     "html": ".html",
@@ -67,10 +66,13 @@ extension = file_types[chosen_type]
 prompt = get_unused_prompt(chosen_type)
 
 # Generate AI code
-model = genai.GenerativeModel("gemini-1.5-flash")
+response = client.models.generate_content(
+    model="gemini-1.5-flash",
+    contents=prompt
+)
 
-response = model.generate_content(prompt)
 code = response.text
+
 
 
 # Filename with date and type
