@@ -18,8 +18,14 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install Gemini SDK
-        run: pip install --upgrade google-genai
+     - name: Clean old Google AI packages
+      run: |
+      pip uninstall -y google-generativeai || true
+      pip uninstall -y google || true
+
+     - name: Install Gemini SDK (official)
+      run: pip install --upgrade google-genai
+
 
 
 
