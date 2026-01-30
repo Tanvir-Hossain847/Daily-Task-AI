@@ -3,46 +3,34 @@ name: Daily AI Commit
 on:
   schedule:
     - cron: "0 9 * * *"  # runs every day at 9 AM UTC
-  workflow_dispatch:
+  workflow_dispatch:    # allows manual runs
 
 permissions:
-  contents: write
+  contents: write  # needed for push access
 
 jobs:
   run-ai:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Setup Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      # 3️⃣ Upgrade pip
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
+      - name: Install Gemini SDK
+        run: pip install --upgrade google-generativeai
 
-      # 4️⃣ Install the correct Gemini SDK
-      - name: Install Gemini SDK (official)
-        run: |
-          python -m pip uninstall -y google-generativeai || true
-          python -m pip install --upgrade google-generativeai
-
-      # 5️⃣ Run your Daily AI Python script
       - name: Run AI Script
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python daily_ai.py
 
-      # 6️⃣ Commit and push any changes
       - name: Commit and Push
         run: |
-          git config --global user.name "Tanvir-Hossain847"
-          git config --global user.email "tanvirhossaintufa@gmail.com"
+          git config --global user.name "Roksana Dilshad"
+          git config --global user.email "roksanadilshad@gmail.com"
           git add .
-          git commit -m "Daily file update" || echo "No changes to commit"
+          git commit -m "Daily AI file update" || echo "No changes to commit"
           git push

@@ -1,22 +1,26 @@
+import google.generativeai as genai
 import os
 import random
 from datetime import datetime
 import json
-import google.generativeai as genai
+import sys
 
-# Configure API key
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+# Load Gemini API key from environment
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    print("GEMINI_API_KEY missing, skipping")
+    sys.exit(0)
 
-# Use FLASH model (THIS WORKS HERE)
-MODEL_NAME = "gemini-1.5-flash"
-model = genai.GenerativeModel(MODEL_NAME)
+genai.configure(api_key=api_key)
 
+# File types and extensions
 file_types = {
     "html": ".html",
     "css": ".css",
     "javascript": ".js"
 }
 
+# Prompts per file type
 prompts = {
     "html": [
         "Create an HTML page with a motivational quote and styled background.",
@@ -31,24 +35,26 @@ prompts = {
     "javascript": [
         "Write JavaScript code that displays a random fun fact in the console.",
         "Create a JavaScript function that changes background color every 5 second.",
-        "Make a JavaScript countdown timer starting from 10."
+        "Make a JavaScript countdown timer that starts from 10, and when it ends make the background change color."
     ]
 }
 
+# File to track used prompts
 used_prompts_file = "used_prompts.json"
 
+# Load used prompts or start fresh
 if os.path.exists(used_prompts_file):
     with open(used_prompts_file, "r", encoding="utf-8") as f:
         used_prompts = json.load(f)
 else:
-    used_prompts = {k: [] for k in file_types}
+    used_prompts = {ftype: [] for ftype in file_types.keys()}
 
 def save_used_prompts():
     with open(used_prompts_file, "w", encoding="utf-8") as f:
         json.dump(used_prompts, f, indent=2)
 
 def get_unused_prompt(ftype):
-    available = [p for p in prompts[ftype] if p not in used_prompts[ftype]]
+    available = [p for p in prompts[ftype] if p not in used_prompts.get(ftype, [])]
     if not available:
         used_prompts[ftype] = []
         available = prompts[ftype]
@@ -57,31 +63,42 @@ def get_unused_prompt(ftype):
     save_used_prompts()
     return choice
 
+# Pick a random file type
 chosen_type = random.choice(list(file_types.keys()))
 extension = file_types[chosen_type]
+
+# Pick a prompt that hasn’t been used recently
 prompt = get_unused_prompt(chosen_type)
 
-print(f"USING MODEL: {MODEL_NAME}")
-print(f"PROMPT: {prompt}")
+# Generate AI code using Gemini
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-response = model.generate_content(prompt)
-code = response.text
+try:
+    response = model.generate_content(prompt)
+    code = response.text.strip()
+except Exception as e:
+    print("Gemini error:", e)
+    sys.exit(0)
 
-file_name = f"{chosen_type}_{datetime.now().strftime('%Y_%m_%d')}{extension}"
+# Filename with date and type
+file_name = f"{chosen_type}_file_{datetime.now().strftime('%Y_%m_%d')}{extension}"
 
+# Save generated code to file
 with open(file_name, "w", encoding="utf-8") as f:
     f.write(code)
 
-print(f"Generated {file_name}")
+print(f" Generated {file_name} with prompt: {prompt}")
 
+# Update README.md log
 readme_file = "README.md"
-log_entry = f"- {datetime.now().strftime('%Y-%m-%d')}: `{file_name}` — *{prompt}*\n"
+log_entry = f"- {datetime.now().strftime('%Y-%m-%d')}: Generated `{file_name}` — prompt: *{prompt}*\n"
 
 if os.path.exists(readme_file):
     with open(readme_file, "a", encoding="utf-8") as f:
         f.write(log_entry)
 else:
     with open(readme_file, "w", encoding="utf-8") as f:
-        f.write("# Daily AI Generated Files Log\n\n" + log_entry)
+        f.write("# Daily AI Generated Files Log\n\n")
+        f.write(log_entry)
 
-print("README updated")
+print(f" Updated {readme_file}")
