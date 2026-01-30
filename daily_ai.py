@@ -7,7 +7,7 @@ from google import genai
 # =========================
 # CONFIG (ONLY WORKING MODEL)
 # =========================
-MODEL_NAME = "models/gemini-1.5-flash-latest"
+MODEL_NAME = "gemini-1.5-flash"
 API_KEY = os.environ["GEMINI_API_KEY"]
 
 client = genai.Client(api_key=API_KEY)
