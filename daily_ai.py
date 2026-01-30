@@ -5,10 +5,10 @@ from datetime import datetime
 from google import genai
 
 # =========================
-# CONFIG
+# CONFIG (ONLY WORKING MODEL)
 # =========================
-MODEL_NAME = "gemini-1.0-pro"
-API_KEY = os.getenv("GEMINI_API_KEY")
+MODEL_NAME = "models/gemini-1.5-flash-latest"
+API_KEY = os.environ["GEMINI_API_KEY"]
 
 client = genai.Client(api_key=API_KEY)
 
@@ -35,7 +35,7 @@ prompts = {
     "javascript": [
         "Write JavaScript code that displays a random fun fact in the console.",
         "Create a JavaScript function that changes background color every 5 seconds.",
-        "Make a JavaScript countdown timer starting from 10 that changes the background color at the end."
+        "Make a JavaScript countdown timer starting from 10."
     ]
 }
 
@@ -89,22 +89,15 @@ filename = f"{chosen_type}_file_{datetime.now().strftime('%Y_%m_%d')}{extension}
 with open(filename, "w", encoding="utf-8") as f:
     f.write(code)
 
-print(f"Generated file: {filename}")
-
 # =========================
 # README LOG
 # =========================
-readme_entry = (
-    f"- {datetime.now().strftime('%Y-%m-%d')}: "
-    f"Generated `{filename}` using prompt: *{prompt}*\n"
-)
+log_entry = f"- {datetime.now().strftime('%Y-%m-%d')}: Generated `{filename}` — prompt: *{prompt}*\n"
 
 if os.path.exists("README.md"):
     with open("README.md", "a", encoding="utf-8") as f:
-        f.write(readme_entry)
+        f.write(log_entry)
 else:
     with open("README.md", "w", encoding="utf-8") as f:
         f.write("# Daily AI Generated Files Log\n\n")
-        f.write(readme_entry)
-
-print("README updated")
+        f.write(log_entry)
