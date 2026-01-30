@@ -1,12 +1,21 @@
 import os
 import random
-from datetime import datetime
 import json
+from datetime import datetime
 from google import genai
-import os
 
-# Load your API key from GitHub Secrets (env var)
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+# ---------------------------------------
+# CONFIG
+# ---------------------------------------
+
+MODEL_NAME = "gemini-1.5-pro"
+API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not API_KEY:
+    raise RuntimeError("GEMINI_API_KEY environment variable is not set")
+
+client = genai.Client(api_key=API_KEY)
+
 # File types and extensions
 file_types = {
     "html": ".html",
@@ -28,70 +37,78 @@ prompts = {
     ],
     "javascript": [
         "Write JavaScript code that displays a random fun fact in the console.",
-        "Create a JavaScript function that changes background color every 5 second.",
-        "Make a JavaScript countdown timer that starts from 10, and when it ends make the background change color."
+        "Create a JavaScript function that changes background color every 5 seconds.",
+        "Make a JavaScript countdown timer that starts from 10, and when it ends change the background color."
     ]
 }
 
-# File to track used prompts
 used_prompts_file = "used_prompts.json"
 
-# Load used prompts or start fresh
+# ---------------------------------------
+# LOAD / SAVE USED PROMPTS
+# ---------------------------------------
+
 if os.path.exists(used_prompts_file):
     with open(used_prompts_file, "r", encoding="utf-8") as f:
         used_prompts = json.load(f)
 else:
-    used_prompts = {ftype: [] for ftype in file_types.keys()}
+    used_prompts = {k: [] for k in file_types.keys()}
 
 def save_used_prompts():
     with open(used_prompts_file, "w", encoding="utf-8") as f:
         json.dump(used_prompts, f, indent=2)
 
 def get_unused_prompt(ftype):
-    available = [p for p in prompts[ftype] if p not in used_prompts.get(ftype, [])]
+    available = [p for p in prompts[ftype] if p not in used_prompts[ftype]]
     if not available:
-        # Reset if all used
         used_prompts[ftype] = []
         available = prompts[ftype]
+
     choice = random.choice(available)
     used_prompts[ftype].append(choice)
     save_used_prompts()
     return choice
 
-# Pick a random file type
+# ---------------------------------------
+# PICK TASK
+# ---------------------------------------
+
 chosen_type = random.choice(list(file_types.keys()))
 extension = file_types[chosen_type]
-
-# Pick a prompt that hasn’t been used recently
 prompt = get_unused_prompt(chosen_type)
 
+print(f"USING MODEL: {MODEL_NAME}")
+print(f"PROMPT: {prompt}")
 
-print("USING MODEL: gemini-1.0-pro")
+# ---------------------------------------
+# GENERATE CONTENT
+# ---------------------------------------
 
-# Generate AI code
 response = client.models.generate_content(
-    model="gemini-1.0-pro",
+    model=MODEL_NAME,
     contents=prompt
 )
 
-code = response.text
+code = response.text.strip()
 
+# ---------------------------------------
+# SAVE OUTPUT
+# ---------------------------------------
 
-
-# Filename with date and type
 file_name = f"{chosen_type}_file_{datetime.now().strftime('%Y_%m_%d')}{extension}"
 
-# Save generated code to file
 with open(file_name, "w", encoding="utf-8") as f:
     f.write(code)
 
-print(f" Generated {file_name} with prompt: {prompt}")
+print(f"Generated file: {file_name}")
 
-# Update README.md log
+# ---------------------------------------
+# UPDATE README LOG
+# ---------------------------------------
+
 readme_file = "README.md"
 log_entry = f"- {datetime.now().strftime('%Y-%m-%d')}: Generated `{file_name}` — prompt: *{prompt}*\n"
 
-# Append to README or create if missing
 if os.path.exists(readme_file):
     with open(readme_file, "a", encoding="utf-8") as f:
         f.write(log_entry)
@@ -100,4 +117,4 @@ else:
         f.write("# Daily AI Generated Files Log\n\n")
         f.write(log_entry)
 
-print(f" Updated {readme_file}")
+print("README updated successfully")
