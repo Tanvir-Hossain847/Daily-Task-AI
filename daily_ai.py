@@ -65,6 +65,9 @@ extension = file_types[chosen_type]
 # Pick a prompt that hasn’t been used recently
 prompt = get_unused_prompt(chosen_type)
 
+
+print("USING MODEL: gemini-1.0-pro")
+
 # Generate AI code
 response = client.models.generate_content(
     model="gemini-1.0-pro",
